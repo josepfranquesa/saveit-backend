@@ -17,7 +17,7 @@ class UserRepository
         return User::whereNull('deleted_at')->findOrFail($id);
     }
 
-    public function createUser($data)
+    public static function createUser($data)
     {
         return User::create([
             'name' => $data['name'],

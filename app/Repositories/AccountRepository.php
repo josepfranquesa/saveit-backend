@@ -5,8 +5,6 @@ use App\Models\Account;
 
 class AccountRepository
 {
-    public function getAllAccounts() {}
-
     public function findAccountById($id) {}
 
     public function createAccount($data) {}
@@ -14,4 +12,9 @@ class AccountRepository
     public function updateAccount($id, $data) {}
 
     public function deleteAccount($id) {}
+
+    public function getAccountsByIds(array $accountIds)
+    {
+        return Account::whereIn('id', $accountIds)->get();
+    }
 }

@@ -31,4 +31,9 @@ class RegisterRepository
     {
         return Register::destroy($id);
     }
+
+    public function getByAccountId($accountId)
+    {
+        return Register::where('account_id', $accountId)->get();
+    }
 }

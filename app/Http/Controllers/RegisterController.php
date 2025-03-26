@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\RegisterRepository;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
+    protected $registerRepository;
+
+    public function __construct(RegisterRepository $registerRepository)
+    {
+        $this->registerRepository = $registerRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -60,5 +68,11 @@ class RegisterController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getRegistersForAccount($id)
+    {
+        $registers = $this->registerRepository->getByAccountId($id);
+        return response()->json($registers);
     }
 }

@@ -9,7 +9,7 @@ class UserRepository
 {
     public function getAllUsers()
     {
-        return User::whereNull('deleted_at')->get(); // Solo usuarios activos
+        return User::whereNull('deleted_at')->get();
     }
 
     public function getUserById($id)

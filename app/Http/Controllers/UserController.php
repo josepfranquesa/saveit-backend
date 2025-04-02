@@ -34,16 +34,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $userData = $request->only(['name', 'email', 'phone', 'password']);
-        $userData['password'] = bcrypt($userData['password']); // Encriptar contraseña
+        $userData['password'] = bcrypt($userData['password']);
 
         $user = UserRepository::createUser($userData);
 
+        $token = $user->createToken('flutter-token')->plainTextToken;
+
         return response()->json([
-            'success' => true,
-            'message' => 'Usuario creado con éxito',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => 3600, // Si luego quieres controlar expiración, puedes modificar esto
             'user' => $user
         ], 201);
     }
+
+
 
     public function update(Request $request, $id)
     {

@@ -83,15 +83,17 @@ class UserController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        // Si las credenciales son correctas, generar un nuevo `remember_token`
-        $token = Str::random(60);
-        $user->remember_token = $token;
-        $user->save();
+        // if (!$user || !Hash::check($request->password, $user->password)) {
+        //     return response()->json(['error' => 'Credenciales inválidas'], 401);
+        // }
+
+        $token = $user->createToken('flutter-token')->plainTextToken;
 
         return response()->json([
-            'success' => true,
-            'token' => $token,
-            'user' => $user
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+            'expires_in'   => 3600,
+            'user'         => $user
         ], 200);
     }
 

@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\AccountRepository;
 use App\Repositories\UserAccountRepository;
+use App\Repositories\UserRepository;
 
 class AccountController extends Controller
 {
     protected $accountRepository;
     protected $userAccountRepository;
+    protected $userRepository;
 
     public function __construct(
         AccountRepository $accountRepository,
-        UserAccountRepository $userAccountRepository
+        UserAccountRepository $userAccountRepository,
+        UserRepository $userRepository
     ) {
         $this->accountRepository = $accountRepository;
         $this->userAccountRepository = $userAccountRepository;
+        $this->userRepository = $userRepository;
     }
 
 
@@ -30,13 +34,34 @@ class AccountController extends Controller
 
     public function getAccountsForUser($id)
     {
-        //Obtener lista de IDs de cuentas asociadas al usuario
         $accountIds = $this->userAccountRepository->getAccountIdsForUser($id);
-
-        //Obtener las cuentas con esos IDs
         $accounts = $this->accountRepository->getAccountsByIds($accountIds);
 
-        //Devolver como respuesta JSON
-        return response()->json($accounts);
+        $formattedAccounts = [];
+        foreach ($accounts as $account) {
+            $userIds = $this->userAccountRepository->getUsersForAccount($account->id);
+            $accountUsers = [];
+            foreach ($userIds as $userId) {
+                $userDetails = $this->userRepository->getUserById($userId);
+                if ($userDetails) {
+                    $accountUsers[] = [
+                        'id'    => $userDetails->id,
+                        'name'  => $userDetails->name,
+                        'email' => $userDetails->email,
+                    ];
+                }
+            }
+
+            $formattedAccounts[] = [
+                'id'           => $account->id,
+                'title'        => $account->title,
+                'created_at'   => $account->created_at,
+                'account_user' => $accountUsers,
+            ];
+        }
+
+        return response()->json(['accounts' => $formattedAccounts]);
     }
+
+
 }

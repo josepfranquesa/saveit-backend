@@ -98,19 +98,19 @@ class UserController extends Controller
     }
 
 
-    public function checkToken(Request $request)
-    {
-        $user = User::where('remember_token', $request->token)->first();
+    // public function checkToken(Request $request)
+    // {
+    //     $user = User::where('remember_token', $request->token)->first();
 
-        if (!$user) {
-            return response()->json(['message' => 'Token inválido'], 401);
-        }
+    //     if (!$user) {
+    //         return response()->json(['message' => 'Token inválido'], 401);
+    //     }
 
-        return response()->json([
-            'success' => true,
-            'user' => $user
-        ], 200);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'user' => $user
+    //     ], 200);
+    // }
 
     public function logout(Request $request)
     {

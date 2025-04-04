@@ -7,13 +7,21 @@ use App\Http\Controllers\UserController;
 use App\Repositories\UserAccountRepository;
 
     Route::middleware(['auth:api'])->post('/logout', [UserController::class, 'logout']);
-    Route::apiResource('users', UserController::class);
+    //Route::apiResource('users', UserController::class);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::post('/login', [UserController::class, 'login']);
+    Route::get('/checkToken', [UserController::class, 'checkToken']);
+
+
 
     //Route::apiResource('accounts', AccountController::class);
     Route::get('/accounts/user/{id}', [AccountController::class, 'getAccountsForUser']);
 
-    Route::apiResource('register', RegisterController::class);
+
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);
 
     Route::delete('/account/user/{account_id}/{user_id}', [UserAccountRepository::class, 'delete']);

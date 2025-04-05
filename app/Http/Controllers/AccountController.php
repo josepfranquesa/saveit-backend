@@ -55,6 +55,7 @@ class AccountController extends Controller
             $formattedAccounts[] = [
                 'id'           => $account->id,
                 'title'        => $account->title,
+                'balance'      => $account->balance,
                 'created_at'   => $account->created_at,
                 'account_user' => $accountUsers,
             ];

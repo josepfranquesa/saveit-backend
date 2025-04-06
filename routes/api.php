@@ -20,6 +20,8 @@ use App\Repositories\UserAccountRepository;
 
     //Route::apiResource('accounts', AccountController::class);
     Route::get('/accounts/user/{id}', [AccountController::class, 'getAccountsForUser']);
+    Route::post('/accounts', [AccountController::class, 'store']);
+    Route::post('/accounts/join', [AccountController::class, 'joinAccount']);
 
 
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);

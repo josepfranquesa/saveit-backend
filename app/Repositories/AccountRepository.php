@@ -5,9 +5,20 @@ use App\Models\Account;
 
 class AccountRepository
 {
-    public function findAccountById($id) {}
+    public function findAccountById($id) {
+        return Account::findOrFail($id);
+    }
 
-    public function createAccount($data) {}
+    public function createAccount($host, $title, $balance) {
+        $account = Account::create([
+            'title' => $title,
+            'host' => $host,
+            'balance' => $balance,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        return $account;
+    }
 
     public function updateAccount($id, $data) {}
 

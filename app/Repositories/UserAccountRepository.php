@@ -19,4 +19,15 @@ class UserAccountRepository
     {
         return UserAccount::where('account_id', $accountId)->where('user_id', $userId)->delete();
     }
+
+    public function createUserAccount($userId, $accountId)
+    {
+        $userAccount = UserAccount::create([
+            'user_id' => $userId,
+            'account_id' => $accountId,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        return $userAccount;
+    }
 }

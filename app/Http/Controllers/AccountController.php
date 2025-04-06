@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\AccountRepository;
 use App\Repositories\UserAccountRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
@@ -26,7 +27,15 @@ class AccountController extends Controller
 
     public function show($id) {} // Obtener una cuenta por ID
 
-    public function store(Request $request) {} // Crear una nueva cuenta
+    public function store(Request $request) {
+        //tengo que obtener el id del usuario, el titulo de la cuenta, el balance de la cuenta
+        $host = $request->user_id;
+        $accountTitle = $request->title;
+        $accountBalance = $request->balance;
+        $account = $this->accountRepository->createAccount($host, $accountTitle, $accountBalance);
+        $this->userAccountRepository->createUserAccount($host, $account->id);
+        return response()->json(['account' => $account, 'message' => 'Cuenta creada correctamente']);
+    }
 
     public function update(Request $request, $id) {} // Actualizar una cuenta
 
@@ -64,5 +73,11 @@ class AccountController extends Controller
         return response()->json(['accounts' => $formattedAccounts]);
     }
 
+    public function joinAccount(Request $request) {
+        $account = $this->accountRepository->findAccountById($request->id);
+        $userId = $request->user_id;
+        $this->userAccountRepository->createUserAccount($userId, $account->id);
+        return response()->json(['account' => $account, 'message' => 'Cuenta creada correctamente']);
+    }
 
 }

@@ -15,10 +15,22 @@ class UserAccountRepository
         return UserAccount::where('account_id', $accountId)->pluck('user_id')->toArray();
     }
 
+    public function findUserAccount($userId, $accountId){
+        return UserAccount::where('account_id', $accountId)
+                          ->where('user_id', $userId)
+                          ->first();
+    }
+
     public function delete($accountId, $userId)
     {
-        return UserAccount::where('account_id', $accountId)->where('user_id', $userId)->delete();
+        $account = self::findUserAccount($userId, $accountId);
+        if($account){
+            return $account->delete();
+        } else {
+            return false;
+        }
     }
+
 
     public function createUserAccount($userId, $accountId)
     {

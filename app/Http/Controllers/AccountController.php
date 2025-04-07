@@ -76,8 +76,10 @@ class AccountController extends Controller
     public function joinAccount(Request $request) {
         $account = $this->accountRepository->findAccountById($request->id);
         $userId = $request->user_id;
-        $this->userAccountRepository->createUserAccount($userId, $account->id);
-        return response()->json(['account' => $account, 'message' => 'Cuenta creada correctamente']);
+        if(!$this->userAccountRepository->findUserAccount($userId, $account->id)){
+            $this->userAccountRepository->createUserAccount($userId, $account->id);
+            return response()->json(['account' => $account, 'message' => 'Te has unido correctamente a la cuenta']);
+        }
+        else return response()->json(['account' => $account, 'message' => 'Ya formas parte de esta cuenta']);
     }
-
 }

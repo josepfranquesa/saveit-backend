@@ -20,6 +20,13 @@ class SubCategoryRepository
         return SubCategory::find($id);
     }
 
+    public static function findByCategoryName($categoryId, $name)
+    {
+        return SubCategory::where('category_id', $categoryId)
+                          ->where('name', $name)
+                          ->first();
+    }
+
     public static function store($categoryId, $name)
     {
         return SubCategory::create([

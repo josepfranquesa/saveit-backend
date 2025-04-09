@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SubCategory;
+use App\Repositories\AccountSubcategoryRepository;
+use App\Repositories\SubCategoryRepository;
 
 class SubCategoryController extends Controller
 {
@@ -14,13 +16,20 @@ class SubCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string',
-        ]);
+         //    "account_id": 1,
+        //    "id_category": 1,
 
-        $subcategory = SubCategory::create($request->all());
-
-        return response()->json($subcategory, 201);
+        //    "id_subcat": 10,
+        //    "name_subcat": "gaolina",
+        $subcategory = SubCategoryRepository::find($request->id_subcat);
+        $account_subcategory = AccountSubcategoryRepository::find($request->account_id, $request->id_subcat);
+        if(!$account_subcategory){
+            $account_subcategory = AccountSubcategoryRepository::store($request->account_id, $request->id_subcat);
+            if(!$subcategory){
+                $subcategory = SubCategoryRepository::store($request->id_category, $request->name_subcat);
+            }
+            else return response()->json(['subcategory' => $subcategory, 'message' => 'Subcategoria creada para esta cuenta']);
+        }
+        else return response()->json(['subcategory' => $subcategory, 'message' => 'Ya existe esta subcategoria para esta cuenta']);
     }
 }

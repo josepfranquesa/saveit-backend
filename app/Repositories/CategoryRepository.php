@@ -10,8 +10,17 @@ class CategoryRepository
         return Category::with('subcategories')->get();
     }
 
-    public function create(array $data)
+    public static function findByNameType($name_category, $type_category) {
+        return Category::whereRaw('LOWER(name) = ?', [strtolower($name_category)])
+                       ->where('type', $type_category)
+                       ->first();
+    }
+
+    public static function store($name, $type)
     {
-        return Category::create($data);
+        return Category::create([
+            'name' => $name,
+            'type' => $type,
+        ]);
     }
 }

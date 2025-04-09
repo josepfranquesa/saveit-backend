@@ -12,6 +12,11 @@ class SubCategory extends Model
 
     protected $fillable = ['category_id', 'name'];
 
+    public function accounts()
+    {
+        return $this->belongsToMany(AccountSubcategory::class);
+    }
+
     // Relación con Category (cada subcategoría pertenece a una categoría)
     public function category()
     {

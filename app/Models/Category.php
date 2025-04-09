@@ -9,8 +9,12 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories'; // Opcional si sigue la convención de nombres
-    protected $fillable = ['type', 'name'];
+    protected $table = 'categories';
+
+    protected $fillable = ['name', 'type'];
+
+    // Para indicar que la tabla usa timestamps, se deja por defecto en true
+    public $timestamps = true;
 
     public function subcategories()
     {
@@ -24,7 +28,6 @@ class Category extends Model
 
     public function isIncomeCategory()
     {
-        return $this->type === 'INGRES';
+        return $this->type === 'INGRESO';
     }
 }
-

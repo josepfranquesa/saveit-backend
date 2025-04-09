@@ -14,4 +14,17 @@ class SubCategoryRepository
     {
         return SubCategory::create($data);
     }
+
+    public static function find($id)
+    {
+        return SubCategory::find($id);
+    }
+
+    public static function store($categoryId, $name)
+    {
+        return SubCategory::create([
+            'category_id' => $categoryId,
+            'name' => $name,
+        ]);
+    }
 }

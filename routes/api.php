@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Repositories\UserAccountRepository;
@@ -26,5 +28,11 @@ use App\Repositories\UserAccountRepository;
 
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);
 
+
     Route::delete('/account/user/{account_id}/{user_id}', [UserAccountRepository::class, 'delete']);
 
+
+    Route::post('/category', [CategoryController::class, 'store']);
+
+
+    Route::post('/subcategory', [SubCategoryController::class, 'store']);

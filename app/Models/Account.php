@@ -18,6 +18,11 @@ class Account extends Model
         'balance',
     ];
 
+    public function subcategories()
+    {
+        return $this->belongsToMany(SubCategory::class, 'account_subcategory', 'account_id', 'subcategory_id');
+    }
+
     public function registers()
     {
         return $this->hasMany(Register::class);

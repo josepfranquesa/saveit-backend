@@ -24,8 +24,8 @@ class AccountSubcategoryRepository
         ]);
     }
 
-    public function delete($accountId, $subcategoryId)
+    public static function getCategoryByAccountId($accountId)
     {
-
+        return AccountSubcategory::where('account_id', $accountId)->pluck('category_id')->toArray();
     }
 }

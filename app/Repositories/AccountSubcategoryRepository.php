@@ -28,4 +28,8 @@ class AccountSubcategoryRepository
     {
         return AccountSubcategory::where('account_id', $accountId)->pluck('category_id')->toArray();
     }
+
+    public static function getSubcategoryByCategoryIdAndAccountId($categoryId, $accountId){
+        return AccountSubcategory::where('category_id', $categoryId)->where('account_id', $accountId)->pluck('subcategory_id')->toArray();
+    }
 }

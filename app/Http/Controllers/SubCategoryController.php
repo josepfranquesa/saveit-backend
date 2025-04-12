@@ -41,4 +41,10 @@ class SubCategoryController extends Controller
         else return response()->json(['subcategory' => $subcategory, 'message' => 'No se ha podido crear la subcategoria para esta cuenta']);
 
     }
+
+    public function getSubcategoryForCategoryAccount($category_id, $account_id){
+        $subcategoriesIds = AccountSubcategoryRepository::getSubcategoryByCategoryIdAndAccountId($category_id, $account_id);
+        $subcategories = SubcategoryRepository::getSubcategoryByIds($subcategoriesIds);
+        return response()->json($subcategories);
+    }
 }

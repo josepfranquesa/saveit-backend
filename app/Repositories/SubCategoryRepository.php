@@ -34,4 +34,8 @@ class SubCategoryRepository
             'name' => $name,
         ]);
     }
+
+    public static function getSubcategoryByIds($ids){
+        return SubCategory::whereIn('id', $ids)->get();
+    }
 }

@@ -35,7 +35,7 @@ class SubCategoryRepository
         ]);
     }
 
-    public static function getSubcategoryByIds($ids){
-        return SubCategory::whereIn('id', $ids)->get();
+    public static function getSubcategoryByIds($ids) {
+        return SubCategory::whereIn('id', $ids)->whereNotNull('name')->get();
     }
 }

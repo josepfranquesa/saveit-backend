@@ -17,6 +17,7 @@ class Objective extends Model
         'subcategory_id',
         'type',
         'amount',
+        'title',
     ];
 
     protected $casts = [

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ObjectiveController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
@@ -38,3 +39,11 @@ use App\Repositories\UserAccountRepository;
 
     Route::post('/subcategory', [SubCategoryController::class, 'store']);
     Route::get('/subcategory/category/{category_id}/{account_id}', [SubCategoryController::class, 'getSubcategoryForCategoryAccount']);
+
+
+    Route::post('/objective', [ObjectiveController::class, 'storeObjective']);
+    Route::post('/limit', [ObjectiveController::class, 'storeLimit']);
+    Route::get('/objective/{id}', [ObjectiveController::class, 'getObjectiveAccount']);
+    Route::get('/limit/{id}', [ObjectiveController::class, 'getLimitAccount']);
+
+

@@ -28,7 +28,6 @@ class SubCategoryController extends Controller
         //    "account_id": 1,
         //    "id_category": 1,
 
-        //    "id_subcat": 10,
         //    "name_subcat": "gaolina",
         $subcategory = SubCategoryRepository::findByCategoryName($request->id_category, $request->name_subcat);
         if(!$subcategory) $subcategory = SubCategoryRepository::store($request->id_category, $request->name_subcat);

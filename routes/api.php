@@ -10,7 +10,6 @@ use App\Http\Controllers\UserController;
 use App\Repositories\UserAccountRepository;
 
     Route::middleware(['auth:api'])->post('/logout', [UserController::class, 'logout']);
-    //Route::apiResource('users', UserController::class);
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/users', [UserController::class, 'store']);
@@ -20,8 +19,6 @@ use App\Repositories\UserAccountRepository;
     Route::get('/checkToken', [UserController::class, 'checkToken']);
 
 
-
-    //Route::apiResource('accounts', AccountController::class);
     Route::get('/accounts/user/{id}', [AccountController::class, 'getAccountsForUser']);
     Route::post('/accounts', [AccountController::class, 'store']);
     Route::post('/accounts/join', [AccountController::class, 'joinAccount']);
@@ -43,7 +40,7 @@ use App\Repositories\UserAccountRepository;
 
     Route::post('/objective', [ObjectiveController::class, 'storeObjective']);
     Route::post('/limit', [ObjectiveController::class, 'storeLimit']);
-    Route::get('/objective/{id}', [ObjectiveController::class, 'getObjectiveAccount']);
-    Route::get('/limit/{id}', [ObjectiveController::class, 'getLimitAccount']);
+    Route::get('/objective/{acount_id}', [ObjectiveController::class, 'getGoalAccount']);
+    Route::get('/limit/{acount_id}', [ObjectiveController::class, 'getLimitAccount']);
 
 

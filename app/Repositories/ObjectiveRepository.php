@@ -26,9 +26,11 @@ class ObjectiveRepository
     }
 
 
-    public function findObjectiveById($id)
+    public static function findObjectiveByAccount($account_id, $type)
     {
-        // Buscar un objetivo por ID
+        return Objective::where('account_id', $account_id)
+        ->where('type', $type)
+        ->get();
     }
 
     public function updateObjective($id, array $data)

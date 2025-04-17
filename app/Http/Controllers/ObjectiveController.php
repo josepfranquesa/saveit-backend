@@ -12,17 +12,16 @@ class ObjectiveController extends Controller
         $validated = $request->validate([
             'creator_id'     => ['required', 'exists:users,id'],
             'account_id'     => ['exists:accounts,id'],
-            'subcategory_id' => ['nullable', 'exists:subcategories,id'],
-            'amount'         => ['required', 'numeric', 'min:0'],
+            'total'          => ['nullable', 'numeric', 'min:0'],
             'title'          => ['nullable', 'string', 'max:255'],
         ]);
 
         $data = [
             'user_id'        => $validated['creator_id'],
             'account_id'     => $validated['account_id']     ?? null,
-            'subcategory_id' => $validated['subcategory_id'] ?? null,
             'type'           => 'GOAL',
-            'amount'         => $validated['amount'],
+            'amount'         => 0,
+            'total'         => $validated['total'],
             'title'          => $validated['title']          ?? null,
         ];
 
@@ -47,7 +46,7 @@ class ObjectiveController extends Controller
             'creator_id'     => ['required', 'exists:users,id'],
             'account_id'     => ['exists:accounts,id'],
             'subcategory_id' => ['exists:subcategories,id'],
-            'amount'         => ['required', 'numeric', 'min:0'],
+            'total'          => ['required', 'numeric', 'min:0'],
         ]);
 
         $data = [
@@ -55,7 +54,8 @@ class ObjectiveController extends Controller
             'account_id'     => $validated['account_id']     ?? null,
             'subcategory_id' => $validated['subcategory_id'] ?? null,
             'type'           => 'LIMIT',
-            'amount'         => $validated['amount'],
+            'total'          => $validated['total'],
+            'amount'         => 0,
         ];
 
         $objective = ObjectiveRepository::findLimitBySubcatAccount($data['account_id'], $data['subcategory_id']);
@@ -72,14 +72,26 @@ class ObjectiveController extends Controller
         }
     }
 
-    public function getObjectiveAccount($id)
+    public function getGoalAccount($account_id)
     {
+        $goals = ObjectiveRepository::findObjectiveByAccount($account_id, "GOAL");
 
+        return response()->json([
+            'account_id' => $account_id,
+            'type'       => 'GOAL',
+            'objectives' => $goals,
+        ], 200);
     }
 
-    public function getLimitAccount($id)
+    public function getLimitAccount($account_id)
     {
+        $goals = ObjectiveRepository::findObjectiveByAccount($account_id, "LIMIT");
 
+        return response()->json([
+            'account_id' => $account_id,
+            'type'       => 'LIMIT',
+            'objectives' => $goals,
+        ], 200);
     }
 
 }

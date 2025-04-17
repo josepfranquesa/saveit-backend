@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('title', 255)->nullable();
             $table->enum('type', ['GOAL', 'LIMIT']);
             $table->double('amount', 15, 2);
+            $table->double('total', 15, 2);
             $table->timestamps();
         });
     }

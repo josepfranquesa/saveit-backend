@@ -38,4 +38,8 @@ class SubCategoryRepository
     public static function getSubcategoryByIds($ids) {
         return SubCategory::whereIn('id', $ids)->whereNotNull('name')->get();
     }
+
+    public static function getSubcategoryByIdsWithNull($ids) {
+        return SubCategory::whereIn('id', $ids)->get();
+    }
 }

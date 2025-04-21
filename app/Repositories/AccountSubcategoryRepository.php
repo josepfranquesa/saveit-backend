@@ -29,7 +29,23 @@ class AccountSubcategoryRepository
         return AccountSubcategory::where('account_id', $accountId)->pluck('category_id')->toArray();
     }
 
+    public static function getSubcategoryByAccountId($accountId){
+        return AccountSubcategory::where('account_id', $accountId)->pluck('subcategory_id')->toArray();
+    }
+
     public static function getSubcategoryByCategoryIdAndAccountId($categoryId, $accountId){
         return AccountSubcategory::where('category_id', $categoryId)->where('account_id', $accountId)->pluck('subcategory_id')->toArray();
     }
+
+    public static function getSubcategoryDespesaByAccountId($account_id)
+    {
+        return AccountSubcategory::query()
+            ->join('categories', 'account_category_subcategory.category_id', '=', 'categories.id')
+            ->where('account_category_subcategory.account_id', $account_id)
+            ->where('categories.type', 'Despesa')
+            ->orderBy('account_category_subcategory.category_id')   // <- Aquí
+            ->pluck('account_category_subcategory.subcategory_id')
+            ->toArray();
+    }
+
 }

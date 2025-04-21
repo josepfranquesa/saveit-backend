@@ -15,6 +15,7 @@ class Objective extends Model
         'user_id',
         'account_id',
         'subcategory_id',
+        'limit_name',
         'type',
         'amount',
         'total',

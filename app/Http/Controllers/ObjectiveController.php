@@ -10,15 +10,15 @@ class ObjectiveController extends Controller
     public function storeObjective(Request $request)
     {
         $validated = $request->validate([
-            'creator_id'     => ['required', 'exists:users,id'],
-            'account_id'     => ['exists:accounts,id'],
+            'creatorId'     => ['required', 'exists:users,id'],
+            'accountId'     => ['exists:accounts,id'],
             'total'          => ['nullable', 'numeric', 'min:0'],
             'title'          => ['nullable', 'string', 'max:255'],
         ]);
 
         $data = [
-            'user_id'        => $validated['creator_id'],
-            'account_id'     => $validated['account_id']     ?? null,
+            'user_id'        => $validated['creatorId'],
+            'account_id'     => $validated['accountId']     ?? null,
             'type'           => 'GOAL',
             'amount'         => 0,
             'total'         => $validated['total'],

@@ -35,7 +35,37 @@ class RegisterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 1. Validamos los campos comunes
+        $data = $request->validate([
+            'amount'        => 'required|numeric',
+            'origin'        => 'required|string',
+            'objectiveId'   => 'nullable|integer|exists:objectives,id',
+            'subcategoryId' => 'nullable|integer|exists:subcategories,id',
+            'periodicId'    => 'nullable|integer|exists:periodics,id',
+            'limit'         => 'nullable|numeric', // si tuvieras campo limit
+        ]);
+
+        // 2. Determinamos el tipo de registro
+        if (! empty($data['periodicId'])) {
+            // Registro recurrente
+            //$register = $this->registerRepository->createRecurrent($request->route('id'), $data);
+        }
+        elseif (! empty($data['objectiveId'])) {
+            // Registro normal asociado a un objetivo
+            //$register = $this->registerRepository->createWithObjective($request->route('id'), $data);
+        }
+        elseif (! empty($data['limit'])) {
+            // Registro normal con un límite
+            //$register = $this->registerRepository->createWithLimit($request->route('id'), $data);
+        }
+        else {
+            // Registro “simple” o normal
+            //$register = $this->registerRepository->createNormal($request->route('id'), $data);
+        }
+
+        return response()->json([
+            //'register' => $register
+        ], 201);
     }
 
     /**

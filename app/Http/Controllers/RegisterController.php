@@ -37,14 +37,16 @@ class RegisterController extends Controller
     {
         // 1. Validamos los campos comunes
         $data = $request->validate([
-            'amount'        => 'required|numeric',
-            'origin'        => 'required|string',
-            'objectiveId'   => 'nullable|integer|exists:objectives,id',
-            'subcategoryId' => 'nullable|integer|exists:subcategories,id',
-            'periodicId'    => 'nullable|integer|exists:periodics,id',
-            'limit'         => 'nullable|numeric', // si tuvieras campo limit
+            'user_id'        => 'required|numeric',
+            'account_id'     => 'required|numeric',
+            'amount'         => 'required|numeric',
+            'origin'         => 'required|string',
+            'objectiveId'    => 'nullable|integer|exists:objectives,id',
+            'subcategory_id' => 'nullable|integer|exists:subcategories,id',
+            'periodicId'     => 'nullable|integer|exists:periodics,id',
+            'limit'          => 'nullable|numeric',
         ]);
-
+        $register = null;
         // 2. Determinamos el tipo de registro
         if (! empty($data['periodicId'])) {
             // Registro recurrente
@@ -59,12 +61,12 @@ class RegisterController extends Controller
             //$register = $this->registerRepository->createWithLimit($request->route('id'), $data);
         }
         else {
-            // Registro “simple” o normal
-            //$register = $this->registerRepository->createNormal($request->route('id'), $data);
+            // Aqui solo tendre request->amount y request->origin
+            $register = RegisterRepository::createNormal($data);
         }
 
         return response()->json([
-            //'register' => $register
+            'register' => $register
         ], 201);
     }
 

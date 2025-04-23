@@ -34,6 +34,19 @@ class RegisterRepository
 
     public function getByAccountId($accountId)
     {
-        return Register::where('account_id', $accountId)->get();
+        return Register::where('account_id', $accountId)->orderBy('created_at', 'desc')->get();
+    }
+
+    public static function createNormal($data)
+    {
+        return Register::create([
+            'user_id'        => $data['user_id'],
+            'account_id'     => $data['account_id'],
+            'amount'         => $data['amount'],
+            'origin'         => $data['origin'],
+            'subcategory_id' => $data['subcategory_id'] ?? null,
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ]);
     }
 }

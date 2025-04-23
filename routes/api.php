@@ -23,7 +23,7 @@ use App\Repositories\UserAccountRepository;
     Route::post('/accounts', [AccountController::class, 'store']);
     Route::post('/accounts/join', [AccountController::class, 'joinAccount']);
 
-    Route::post('/register/account/{id}', [RegisterController::class, 'store']);
+    Route::post('/register/account', [RegisterController::class, 'store']);
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);
 
 

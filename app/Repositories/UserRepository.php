@@ -12,7 +12,7 @@ class UserRepository
         return User::whereNull('deleted_at')->get();
     }
 
-    public function getUserById($id)
+    public static function getUserById($id)
     {
         return User::whereNull('deleted_at')->findOrFail($id);
     }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Repositories\UserAccountRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -139,6 +140,17 @@ class UserController extends Controller
         ]);
     }
 
+    public function getUsersForAccount($accountId)
+    {
+        $userIds = UserAccountRepository::getUsersForAccount($accountId);
+
+        $users = [];
+        foreach ($userIds as $id) {
+            $users[] = UserRepository::getUserById($id);
+        }
+
+        return response()->json($users);
+    }
 
 
 }

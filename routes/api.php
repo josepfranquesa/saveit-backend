@@ -17,7 +17,7 @@ use App\Repositories\UserAccountRepository;
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::post('/login', [UserController::class, 'login']);
     Route::get('/checkToken', [UserController::class, 'checkToken']);
-
+    Route::get('/users/account/{id}', [UserController::class, 'getUsersForAccount']);
 
     Route::get('/accounts/user/{id}', [AccountController::class, 'getAccountsForUser']);
     Route::post('/accounts', [AccountController::class, 'store']);

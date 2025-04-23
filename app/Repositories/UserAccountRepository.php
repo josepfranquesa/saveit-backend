@@ -10,7 +10,7 @@ class UserAccountRepository
         return UserAccount::where('user_id', $userId)->pluck('account_id')->toArray();
     }
 
-    public function getUsersForAccount($accountId)
+    public static function getUsersForAccount($accountId)
     {
         return UserAccount::where('account_id', $accountId)->pluck('user_id')->toArray();
     }

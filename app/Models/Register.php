@@ -10,7 +10,7 @@ class Register extends Model
 {
     use HasFactory;
 
-    protected $table = 'registers'; // Nombre de la tabla en la BD
+    protected $table = 'registers';
 
     protected $fillable = [
         'user_id',
@@ -20,6 +20,7 @@ class Register extends Model
         'subcategory_id',
         'amount',
         'origin',
+        'name_category',
     ];
 
     /**

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubCategory;
+use App\Repositories\CategoryRepository;
 use App\Repositories\RegisterRepository;
+use App\Repositories\SubCategoryRepository;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -61,7 +64,7 @@ class RegisterController extends Controller
             //$register = $this->registerRepository->createWithLimit($request->route('id'), $data);
         }
         else {
-            // Aqui solo tendre request->amount y request->origin
+            $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
             $register = RegisterRepository::createNormal($data);
         }
 

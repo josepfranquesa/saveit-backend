@@ -45,6 +45,7 @@ class RegisterRepository
             'amount'         => $data['amount'],
             'origin'         => $data['origin'],
             'subcategory_id' => $data['subcategory_id'] ?? null,
+            'name_category'  => $data['name_category'] ?? null,
             'created_at'     => now(),
             'updated_at'     => now(),
         ]);

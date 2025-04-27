@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Category;
 use App\Models\SubCategory;
 
 class SubCategoryRepository
@@ -33,6 +34,15 @@ class SubCategoryRepository
             'category_id' => $categoryId,
             'name' => $name,
         ]);
+    }
+
+    public static function findNameByCatSubcatId($id) {
+        $subcategory = SubCategory::find($id);
+        if ($subcategory->name != null) {
+            return $subcategory->name;
+        } else {
+            return Category::find($subcategory->category_id)->name;
+        }
     }
 
     public static function getSubcategoryByIds($ids) {

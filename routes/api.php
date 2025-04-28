@@ -24,7 +24,11 @@ use App\Repositories\UserAccountRepository;
     Route::post('/accounts/join', [AccountController::class, 'joinAccount']);
 
     Route::post('/register/account', [RegisterController::class, 'store']);
+    Route::put('/register/account/{id}', [RegisterController::class, 'update']);
+    Route::delete('/register/account/{id}', [RegisterController::class, 'destroy']);
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);
+    Route::put('/register/account/{id}/update_category/{id_category}', [RegisterController::class, 'updateCategory']);
+
 
 
     Route::delete('/account/user/{account_id}/{user_id}', [UserAccountRepository::class, 'delete']);

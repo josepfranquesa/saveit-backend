@@ -74,27 +74,21 @@ class RegisterController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'user_id'        => 'required|numeric',
+            'account_id'     => 'required|numeric',
+            'amount'         => 'required|numeric',
+            'origin'         => 'required|string',
+            'objectiveId'    => 'nullable|integer|exists:objectives,id',
+            'subcategory_id' => 'nullable|integer|exists:subcategories,id',
+            'periodicId'     => 'nullable|integer|exists:periodics,id',
+            'limit'          => 'nullable|numeric',
+        ]);
+        return RegisterRepository::update($data, $id);
     }
 
     /**
@@ -102,7 +96,16 @@ class RegisterController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return RegisterRepository::delete($id);
+    }
+
+    public static function updateCategory($register_id, $cat_subcat_id){
+        $register = RegisterRepository::find($register_id);
+        $name_category = SubCategoryRepository::findNameByCatSubcatId($cat_subcat_id);
+        $register->subcategory_id = $cat_subcat_id;
+        $register->name_category = $name_category;
+        $register->save();
+        return $register;
     }
 
     public function getRegistersForAccount($id)

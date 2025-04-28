@@ -10,7 +10,7 @@ class RegisterRepository
         return Register::all();
     }
 
-    public function find($id)
+    public static function find($id)
     {
         return Register::findOrFail($id);
     }
@@ -20,14 +20,14 @@ class RegisterRepository
         return Register::create($data);
     }
 
-    public function update($id, array $data)
+    public static function update(array $data, $id)
     {
         $register = Register::findOrFail($id);
         $register->update($data);
         return $register;
     }
 
-    public function delete($id)
+    public static function delete($id)
     {
         return Register::destroy($id);
     }

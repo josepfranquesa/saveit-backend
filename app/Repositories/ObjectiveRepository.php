@@ -6,6 +6,11 @@ use App\Models\Objective;
 
 class ObjectiveRepository
 {
+    public static function findById($id)
+    {
+        return Objective::findOrFail($id);
+    }
+
     public static function createObjective(array $data): Objective
     {
         return Objective::create($data);

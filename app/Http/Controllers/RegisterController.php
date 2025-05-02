@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SubCategory;
 use App\Repositories\CategoryRepository;
+use App\Repositories\ObjectiveRepository;
 use App\Repositories\RegisterRepository;
 use App\Repositories\SubCategoryRepository;
 use Illuminate\Http\Request;
@@ -40,33 +41,39 @@ class RegisterController extends Controller
     {
         // 1. Validamos los campos comunes
         $data = $request->validate([
-            'user_id'        => 'required|numeric',
-            'account_id'     => 'required|numeric',
-            'amount'         => 'required|numeric',
-            'origin'         => 'required|string',
-            'objectiveId'    => 'nullable|integer|exists:objectives,id',
-            'subcategory_id' => 'nullable|integer|exists:subcategories,id',
-            'periodicId'     => 'nullable|integer|exists:periodics,id',
-            'limit'          => 'nullable|numeric',
+            'user_id'         => 'required|numeric',
+            'account_id'      => 'required|numeric',
+            'amount'          => 'required|numeric',
+            'origin'          => 'required|string',
+            'objectiveId'     => 'nullable|integer|exists:objectives,id',
+            'objectiveAmount' => 'nullable|numeric',
+            'subcategory_id'  => 'nullable|integer|exists:subcategories,id',
+            'periodicId'      => 'nullable|integer|exists:periodics,id',
         ]);
-        $register = null;
         // 2. Determinamos el tipo de registro
         if (! empty($data['periodicId'])) {
             // Registro recurrente
             //$register = $this->registerRepository->createRecurrent($request->route('id'), $data);
         }
-        elseif (! empty($data['objectiveId'])) {
-            // Registro normal asociado a un objetivo
-            //$register = $this->registerRepository->createWithObjective($request->route('id'), $data);
+        if (! empty($data['objectiveId'])) {   // Registro normal asociado a un objetivo
+            $objective = ObjectiveRepository::findById($data['objectiveId']);
+            if(($objective->amount + $data['objectiveAmount']) <= $objective->total){
+                $objective->amount += $data['objectiveAmount'];
+                $data['amount'] = $data['amount'] - $data['objectiveAmount'];
+            }else{
+                $data['amount'] = $data['amount'] - ($objective->total - $objective->amount);
+                $objective->amount = $objective->total;
+            }
+            $objective->save();
         }
-        elseif (! empty($data['limit'])) {
-            // Registro normal con un límite
-            //$register = $this->registerRepository->createWithLimit($request->route('id'), $data);
+        if (! empty($data['limit'])) {
+            // Registro normal con un límite(mirar si l'amount si es suma el gasto a la categoria asociada supera el limit de la categoria (si en te))
         }
-        else {
+        if (! empty($data['subcategory_id'])){
             $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
-            $register = RegisterRepository::createNormal($data);
         }
+
+        $register = RegisterRepository::createNormal($data);
 
         return response()->json([
             'register' => $register

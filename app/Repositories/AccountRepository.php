@@ -5,7 +5,7 @@ use App\Models\Account;
 
 class AccountRepository
 {
-    public function findAccountById($id) {
+    public static function findAccountById($id) {
         return Account::findOrFail($id);
     }
 

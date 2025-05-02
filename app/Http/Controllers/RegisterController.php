@@ -74,6 +74,7 @@ class RegisterController extends Controller
         }
 
         $register = RegisterRepository::createNormal($data);
+        AccountController::updateAccountBalance($data['account_id'], $data['amount']);
 
         return response()->json([
             'register' => $register

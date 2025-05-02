@@ -39,6 +39,13 @@ class AccountController extends Controller
 
     public function update(Request $request, $id) {} // Actualizar una cuenta
 
+    public static function updateAccountBalance($id, $balance) {
+        $account = AccountRepository::findAccountById($id);
+        $account->balance = $account->balance + $balance;
+        $account->save();
+        return response()->json(['account' => $account, 'message' => 'Balance actualizado correctamente']);
+    }
+
     public function destroy($id) {} // Eliminar una cuenta
 
     public function getAccountsForUser($id)
@@ -74,7 +81,7 @@ class AccountController extends Controller
     }
 
     public function joinAccount(Request $request) {
-        $account = $this->accountRepository->findAccountById($request->id);
+        $account = AccountRepository::findAccountById($request->id);
         $userId = $request->user_id;
         if(!$this->userAccountRepository->findUserAccount($userId, $account->id)){
             $this->userAccountRepository->createUserAccount($userId, $account->id);

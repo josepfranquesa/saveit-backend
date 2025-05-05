@@ -66,11 +66,9 @@ class RegisterController extends Controller
             }
             $objective->save();
         }
-        if (! empty($data['limit'])) {
-            // Registro normal con un límite(mirar si l'amount si es suma el gasto a la categoria asociada supera el limit de la categoria (si en te))
-        }
         if (! empty($data['subcategory_id'])){
             $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
+            SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
         }
 
         $register = RegisterRepository::createNormal($data);

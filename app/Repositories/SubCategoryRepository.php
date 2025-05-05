@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use App\Models\Objective;
 use App\Models\SubCategory;
 
 class SubCategoryRepository
@@ -51,5 +52,25 @@ class SubCategoryRepository
 
     public static function getSubcategoryByIdsWithNull($ids) {
         return SubCategory::whereIn('id', $ids)->get();
+    }
+
+    public static function checkLimit($subcategory_id, $amount){
+        $limit = ObjectiveRepository::findById($subcategory_id);
+        if($limit == null){
+            return [
+                'message' => 'No existe un limite para esta categoria/subcategoria',
+            ];
+        }
+        else{
+            $limit->amount += $amount;
+            $limit->save();
+            if($limit->amount > $limit->total){
+                return [
+                    'limite' => $limit,
+                    'message' => 'Has superado el limite en la categoria/subcategoria'. $limit->name,
+                ];
+            }
+        }
+
     }
 }

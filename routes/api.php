@@ -36,10 +36,13 @@ use App\Repositories\UserAccountRepository;
 
     Route::post('/category', [CategoryController::class, 'store']);
     Route::get('/category/account/{account_id}', [CategoryController::class, 'getCategoryForAccount']);
+    Route::delete('/category/account/{id}/{accountId}', [CategoryController::class, 'destroyCategoryAccount']);
+
 
     Route::post('/subcategory', [SubCategoryController::class, 'store']);
     Route::get('/subcategory/account/{account_id}', [SubCategoryController::class, 'getSubcategoryForAccount']);
-    Route::get('/subcategory/category/{category_id}/{account_id}', [SubCategoryController::class, 'getSubcategoryForCategoryAccount']);//subcatcoins
+    Route::get('/subcategory/category/{category_id}/{account_id}', [SubCategoryController::class, 'getSubcategoryForCategoryAccount']);
+    Route::delete('/subcategory/account/{id}/{accountId}', [SubCategoryController::class, 'destroySubcategoryAccount']);
 
 
     Route::post('/objective', [ObjectiveController::class, 'storeObjective']);

@@ -67,6 +67,7 @@ class SubCategoryController extends Controller
     public function getSubcategoryForCategoryAccount($category_id, $account_id){
         $subcategoriesIds = AccountSubcategoryRepository::getSubcategoryByCategoryIdAndAccountId($category_id, $account_id);
         $subcategories = SubcategoryRepository::getSubcategoryByIds($subcategoriesIds);
-        return response()->json($subcategories);
+        $subcategoriesWithBalance = SubcategoryRepository::getBalances($subcategories, $account_id);
+        return response()->json($subcategoriesWithBalance);
     }
 }

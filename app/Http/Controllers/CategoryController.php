@@ -31,11 +31,12 @@ class CategoryController extends Controller
         return response()->json(['category' => $category, 'message' => 'Categoria creada para esta cuenta']);
     }
 
-    public function getCategoryForAccount($account_id){
-        $categoriesIds = AccountSubcategoryRepository::getCategoryByAccountId($account_id);
-        $category = CategoryRepository::getCategoyByIds($categoriesIds);
-        return response()->json($category);
-
+    public function getCategoryForAccount(int $account_id)
+    {
+        $categoryIds = AccountSubcategoryRepository::getCategoryByAccountId($account_id);
+        $categories = CategoryRepository::getCategoyByIds($categoryIds);
+        $categoriesWithBalance = CategoryRepository::getBalances($categories, $account_id);
+        return response()->json($categoriesWithBalance);
     }
 
 }

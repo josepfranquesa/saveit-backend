@@ -95,12 +95,15 @@ class RegisterController extends Controller
             'limit'          => 'nullable|numeric',
         ]);
         return RegisterRepository::update($data, $id);
+        //si existe limite se la subcategory_id nueva o antigua, actualizar el limite antiguio y si es el caso actualizar el nuevo
+        //si existe un objetivo asociada, borrar el importe assignado al objetivo y actualizar el nuevo si es el caso
+        //si es recurrente modificar el recurrente
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id) //se tendra que mirar tambien si llega un id de periodic i si es el caso borrar el recurrente, lo mismo que el update con el limite y el objetivo
     {
         return RegisterRepository::delete($id);
     }

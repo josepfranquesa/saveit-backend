@@ -10,11 +10,17 @@ class Category extends Model
     use HasFactory;
 
     protected $table = 'categories';
-
     protected $fillable = ['name', 'type'];
+    public    $timestamps = true;
 
-    // Para indicar que la tabla usa timestamps, se deja por defecto en true
-    public $timestamps = true;
+    protected $appends = ['amount_month'];
+
+    protected $casts = ['amount_month' => 'float'];
+
+    public function getAmountMonthAttribute()
+    {
+        return $this->attributes['amount_month'] ?? 0.0;
+    }
 
     public function subcategories()
     {

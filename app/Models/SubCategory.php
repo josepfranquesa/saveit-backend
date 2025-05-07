@@ -12,6 +12,15 @@ class SubCategory extends Model
 
     protected $fillable = ['category_id', 'name'];
 
+    protected $appends = ['amount_month'];
+
+    protected $casts = ['amount_month' => 'float'];
+
+    public function getAmountMonthAttribute()
+    {
+        return $this->attributes['amount_month'] ?? 0.0;
+    }
+
     public function accounts()
     {
         return $this->belongsToMany(AccountSubcategory::class);

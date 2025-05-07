@@ -3,7 +3,10 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use App\Models\Objective;
+use App\Models\Register;
 use App\Models\SubCategory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubCategoryRepository
 {
@@ -54,6 +57,25 @@ class SubCategoryRepository
         return SubCategory::whereIn('id', $ids)->get();
     }
 
+    public static function getBalances(Collection $subcategories, int $account_id)
+    {
+        // Rango: primer y último día del mes actual
+        $start = Carbon::now()->startOfMonth()->toDateTimeString();
+        $end   = Carbon::now()->endOfMonth()->toDateTimeString();
+
+        foreach ($subcategories as $sub) {
+            // Suma directa usando la columna subcategory_id
+            $total = Register::where('subcategory_id',   $sub->id)
+                ->where('account_id',     $account_id)
+                // ->whereBetween('created_at', [$start, $end])
+                ->sum('amount');
+
+            $sub->amount_month = (float) $total;
+        }
+
+        return $subcategories;
+    }
+
     public static function checkLimit($subcategory_id, $amount){
         $limit = ObjectiveRepository::findById($subcategory_id);
         if($limit == null){
@@ -62,7 +84,7 @@ class SubCategoryRepository
             ];
         }
         else{
-            $limit->amount += $amount;
+            $limit->amount += abs($amount);
             $limit->save();
             if($limit->amount > $limit->total){
                 return [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Register;
 use App\Models\SubCategory;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ObjectiveRepository;
@@ -122,4 +123,26 @@ class RegisterController extends Controller
         $registers = $this->registerRepository->getByAccountId($id);
         return response()->json($registers);
     }
+
+    public function getTotalsNoCategory(int $accountId): array
+    {
+        // Sumamos por separado los montos positivos y negativos, filtrando subcategory_id null
+        $positiveTotal = Register::where('account_id', $accountId)
+            ->whereNull('subcategory_id')
+            ->where('amount', '>', 0)
+            ->sum('amount');
+
+        $negativeTotal = Register::where('account_id', $accountId)
+            ->whereNull('subcategory_id')
+            ->where('amount', '<', 0)
+            ->sum('amount');
+
+        // Nos aseguramos de devolver 0.0 si no hay registros
+        return [
+            'despesaNoCategory' => (float) $negativeTotal,  // importes negativos
+            'ingresoNoCategory' => (float) $positiveTotal,  // importes positivos
+        ];
+    }
+
+
 }

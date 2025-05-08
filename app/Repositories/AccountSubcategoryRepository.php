@@ -47,4 +47,16 @@ class AccountSubcategoryRepository
             ->toArray();
     }
 
+    public static function findSubcatAccount($accountId, $id_subCat){
+        return AccountSubcategory::where('account_id', $accountId)->where('subcategory_id', $id_subCat)->first();
+    }
+
+    public static function findOtherSubcatAccounts($accountSubcat){
+        return AccountSubcategory::where('category_id', $accountSubcat->category_id)->where('subcategory_id', $accountSubcat->subcategory_id)->where('account_id', '!=', $accountSubcat->account_id)->count();
+    }
+
+    public static function getSubcategoriesByCategoryIdAndAccountId($categoryId, $accountId){
+        return AccountSubcategory::where('category_id', $categoryId)->where('account_id', $accountId)->pluck('subcategory_id')->toArray();
+    }
+
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Register;
 use Illuminate\Http\Request;
 use App\Models\SubCategory;
 use App\Repositories\SubCategoryRepository;
 use App\Repositories\AccountSubcategoryRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\RegisterRepository;
 
 class SubCategoryController extends Controller
 {
@@ -70,4 +72,24 @@ class SubCategoryController extends Controller
         $subcategoriesWithBalance = SubcategoryRepository::getBalances($subcategories, $account_id);
         return response()->json($subcategoriesWithBalance);
     }
+
+    public static function destroySubcategoryAccount($id_subCat, $accountId){
+        $registeres = RegisterRepository::findByAcountSubcategory($id_subCat, $accountId);
+        foreach ($registeres as $register){
+            $register->subcategory_id = null;
+            $register->save();
+        }
+        $accountSubcat = AccountSubcategoryRepository::findSubcatAccount($accountId, $id_subCat);
+        if ($accountSubcat){
+            $other_accountSubcat = AccountSubcategoryRepository::findOtherSubcatAccounts($accountSubcat);
+            $accountSubcat->delete();
+            if($other_accountSubcat == 0){
+                SubCategoryRepository::find($id_subCat)->delete();
+            }
+            return response()->json(['message' => 'Subcategoria eliminada para esta cuenta']);
+        } else {
+            return response()->json(['message' => 'No se ha podido eliminar la subcategoria para esta cuenta']);
+        }
+    }
+
 }

@@ -50,4 +50,8 @@ class RegisterRepository
             'updated_at'     => now(),
         ]);
     }
+
+    public static function findByAcountSubcategory($id_subCat, $accountId){
+        return Register::where('account_id', $accountId)->where('subcategory_id', $id_subCat)->orderBy('created_at', 'desc')->get();
+    }
 }

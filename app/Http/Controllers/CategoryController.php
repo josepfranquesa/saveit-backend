@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use App\Http\Controllers\SubCategoryController;
 use App\Repositories\AccountSubcategoryRepository;
+use App\Repositories\RegisterRepository;
 use App\Repositories\SubCategoryRepository;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,27 @@ class CategoryController extends Controller
         $categories = CategoryRepository::getCategoyByIds($categoryIds);
         $categoriesWithBalance = CategoryRepository::getBalances($categories, $account_id);
         return response()->json($categoriesWithBalance);
+    }
+
+    public function destroyCategoryAccount($id_cat, $accountId){
+        $id_subCat_Null = SubCategoryRepository::findByCategoryId($id_cat)->id;
+        $registeres = RegisterRepository::findByAcountSubcategory($id_subCat_Null, $accountId);
+        foreach ($registeres as $register){
+            $register->subcategory_id = null;
+            $register->save();
+        }
+        $subcategoriesIds  = AccountSubcategoryRepository::getSubcategoriesByCategoryIdAndAccountId($id_cat, $accountId);
+        $subcategories = SubCategoryRepository::getSubcategoryByIds($subcategoriesIds);
+        foreach ($subcategories as $subcategory){
+            SubCategoryController::destroySubcategoryAccount($subcategory->id, $accountId);
+        }
+        $accountCat = AccountSubcategoryRepository::findSubcatAccount($accountId, $id_subCat_Null);
+        if ($accountCat){
+            $accountCat->delete();
+            return response()->json(['message' => 'Categoria eliminada para esta cuenta']);
+        } else {
+            return response()->json(['message' => 'No se ha podido eliminar la categoria para esta cuenta']);
+        }
     }
 
 }

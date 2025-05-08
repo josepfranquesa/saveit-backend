@@ -28,7 +28,7 @@ use App\Repositories\UserAccountRepository;
     Route::delete('/register/account/{id}', [RegisterController::class, 'destroy']);
     Route::get('/register/account/{id}', [RegisterController::class, 'getRegistersForAccount']);
     Route::put('/register/account/{id}/update_category/{id_category}', [RegisterController::class, 'updateCategory']);
-
+    Route::get('/register/total/no_category/{accountId}', [RegisterController::class, 'getTotalsNoCategory']);
 
 
     Route::delete('/account/user/{account_id}/{user_id}', [UserAccountRepository::class, 'delete']);

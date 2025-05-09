@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\ObjectiveRepository;
+use App\Repositories\SubCategoryRepository;
 use Illuminate\Http\Request;
 
 class ObjectiveController extends Controller
@@ -10,15 +11,15 @@ class ObjectiveController extends Controller
     public function storeObjective(Request $request)
     {
         $validated = $request->validate([
-            'creatorId'     => ['required', 'exists:users,id'],
-            'accountId'     => ['exists:accounts,id'],
+            'creator_id'     => ['required', 'exists:users,id'],
+            'account_id'     => ['exists:accounts,id'],
             'total'          => ['nullable', 'numeric', 'min:0'],
             'title'          => ['nullable', 'string', 'max:255'],
         ]);
 
         $data = [
-            'user_id'        => $validated['creatorId'],
-            'account_id'     => $validated['accountId']     ?? null,
+            'user_id'        => $validated['creator_id'],
+            'account_id'     => $validated['account_id']     ?? null,
             'type'           => 'GOAL',
             'amount'         => 0,
             'total'         => $validated['total'],
@@ -64,6 +65,7 @@ class ObjectiveController extends Controller
                 'message' => 'Ya existe un limite para esta categoria o subcategoria'
             ], 409);
         } else {
+            $data['limit_name'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
             $objective = ObjectiveRepository::createObjective($data);
             return response()->json([
                 'message'   => 'Limit created successfully',

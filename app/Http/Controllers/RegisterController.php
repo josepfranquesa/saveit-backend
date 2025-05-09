@@ -38,7 +38,7 @@ class RegisterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request) //"The creator id field is required."
     {
         // 1. Validamos los campos comunes
         $data = $request->validate([
@@ -139,8 +139,8 @@ class RegisterController extends Controller
 
         // Nos aseguramos de devolver 0.0 si no hay registros
         return [
-            'despesaNoCategory' => (float) $negativeTotal,  // importes negativos
-            'ingresoNoCategory' => (float) $positiveTotal,  // importes positivos
+            'despesaNoCategory' => (float) $negativeTotal,
+            'ingresoNoCategory' => (float) $positiveTotal,
         ];
     }
 

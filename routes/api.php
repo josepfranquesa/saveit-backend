@@ -49,5 +49,6 @@ use App\Repositories\UserAccountRepository;
     Route::post('/limit', [ObjectiveController::class, 'storeLimit']);
     Route::get('/objective/{acount_id}', [ObjectiveController::class, 'getGoalAccount']);
     Route::get('/limit/{acount_id}', [ObjectiveController::class, 'getLimitAccount']);
+    Route::delete('/objective/{id}', [ObjectiveController::class, 'destroyObjectiveAccount']);
 
 

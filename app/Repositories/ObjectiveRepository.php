@@ -43,8 +43,8 @@ class ObjectiveRepository
         // Actualizar un objetivo
     }
 
-    public function deleteObjective($id)
+    public static function deleteObjective($id)
     {
-        // Eliminar un objetivo
+        return Objective::find($id)->delete();
     }
 }

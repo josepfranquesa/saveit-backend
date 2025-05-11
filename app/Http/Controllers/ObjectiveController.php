@@ -96,4 +96,14 @@ class ObjectiveController extends Controller
         ], 200);
     }
 
+    public function destroyObjectiveAccount($id){
+        $objective = ObjectiveRepository::findById($id);
+        if($objective){
+            ObjectiveRepository::deleteObjective($id);
+            return response()->json(['message' => 'Objetivo eliminado correctamente']);
+        }
+        else return response()->json(['message' => 'No se ha podido eliminar el objetivo']);
+    }
+
+
 }

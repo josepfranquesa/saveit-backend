@@ -105,5 +105,16 @@ class ObjectiveController extends Controller
         else return response()->json(['message' => 'No se ha podido eliminar el objetivo']);
     }
 
+    public static function deleteLimit($id){
+        $objective = ObjectiveRepository::findById($id);
+        if($objective){
+            ObjectiveRepository::deleteObjective($id);
+            return response()->json(['message' => 'Limit eliminado correctamente']);
+        }
+        else return response()->json(['message' => 'No se ha podido eliminar el limit']);
+    }
+
+
+
 
 }

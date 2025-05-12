@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Objective;
 use App\Models\Register;
 use Illuminate\Http\Request;
 use App\Models\SubCategory;
@@ -83,6 +84,7 @@ class SubCategoryController extends Controller
         if ($accountSubcat){
             $other_accountSubcat = AccountSubcategoryRepository::findOtherSubcatAccounts($accountSubcat);
             $accountSubcat->delete();
+            ObjectiveController::deleteLimit($id_subCat);
             if($other_accountSubcat == 0){
                 SubCategoryRepository::find($id_subCat)->delete();
             }

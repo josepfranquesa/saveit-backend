@@ -55,6 +55,7 @@ class CategoryController extends Controller
         $accountCat = AccountSubcategoryRepository::findSubcatAccount($accountId, $id_subCat_Null);
         if ($accountCat){
             $accountCat->delete();
+            ObjectiveController::deleteLimit($id_cat);
             return response()->json(['message' => 'Categoria eliminada para esta cuenta']);
         } else {
             return response()->json(['message' => 'No se ha podido eliminar la categoria para esta cuenta']);

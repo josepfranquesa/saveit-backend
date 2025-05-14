@@ -8,10 +8,6 @@ class AccountSubcategory extends Model
 {
     protected $table = 'account_category_subcategory';
 
-    // Si no tienes columnas created_at/updated_at, desactiva timestamps:
-    public $timestamps = false;
-
-    // Los campos que se pueden asignar de forma masiva.
     protected $fillable = ['account_id', 'category_id', 'subcategory_id'];
 
     public function account()

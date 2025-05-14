@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Register;
+use Carbon\Carbon;
 
 class RegisterRepository
 {
@@ -53,5 +54,20 @@ class RegisterRepository
 
     public static function findByAcountSubcategory($id_subCat, $accountId){
         return Register::where('account_id', $accountId)->where('subcategory_id', $id_subCat)->orderBy('created_at', 'desc')->get();
+    }
+
+    public static function getAmountForGraph($data)
+    {
+        $start = Carbon::parse($data->start_date)->startOfDay();
+        $end   = Carbon::parse($data->end_date)->endOfDay();
+
+        $query = Register::where('account_id', $data->account_id)
+            ->whereBetween('created_at', [$start, $end]);
+
+        if (!empty($data->category_ids) && is_array($data->category_ids)) {
+            $query->whereIn('subcategory_id', $data->category_ids);
+        }
+
+        return (float) $query->sum('amount');
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GraphController;
 use App\Http\Controllers\ObjectiveController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubCategoryController;
@@ -51,4 +52,9 @@ use App\Repositories\UserAccountRepository;
     Route::get('/limit/{acount_id}', [ObjectiveController::class, 'getLimitAccount']);
     Route::delete('/objective/{id}', [ObjectiveController::class, 'destroyObjectiveAccount']);
     Route::delete('/limit/{id}', [ObjectiveController::class, 'destroyLimitAccount']);
+
+
+    Route::post('/graph', [GraphController::class, 'getInfoForGraph']);
+    Route::get('/graph/{acount_id}', [GraphController::class, 'getGraphs']);
+
 

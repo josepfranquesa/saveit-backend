@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Periodic;
 use App\Models\Register;
 use App\Models\SubCategory;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ObjectiveRepository;
 use App\Repositories\RegisterRepository;
 use App\Repositories\SubCategoryRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -49,20 +51,14 @@ class RegisterController extends Controller
             'objectiveId'     => 'nullable|integer|exists:objectives,id',
             'objectiveAmount' => 'nullable|numeric',
             'subcategory_id'  => 'nullable|integer|exists:subcategories,id',
-            'periodicId'      => 'nullable|integer|exists:periodics,id',
+            'periodic_interval' => 'nullable|integer|min:1',
+            'periodic_unit'     => 'nullable|string|in:Días,Semanas,Meses',
         ]);
-        // 2. Determinamos el tipo de registro
-        if (! empty($data['periodicId'])) {
-            // Registro recurrente
-            //$register = $this->registerRepository->createRecurrent($request->route('id'), $data);
-        }
-        if (! empty($data['objectiveId'])) {   // Registro normal asociado a un objetivo
+        if (! empty($data['objectiveId'])) {
             $objective = ObjectiveRepository::findById($data['objectiveId']);
             if(($objective->amount + $data['objectiveAmount']) <= $objective->total){
                 $objective->amount += $data['objectiveAmount'];
-                $data['amount'] = $data['amount'] - $data['objectiveAmount'];
             }else{
-                $data['amount'] = $data['amount'] - ($objective->total - $objective->amount);
                 $objective->amount = $objective->total;
             }
             $objective->save();
@@ -70,10 +66,16 @@ class RegisterController extends Controller
         if (! empty($data['subcategory_id'])){
             $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
             SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
+            //gestionar misstge de error de si s'ha superat el limit, nomes notificar per pantalla
         }
 
         $register = RegisterRepository::createNormal($data);
         AccountController::updateAccountBalance($data['account_id'], $data['amount']);
+
+        if ($data['periodic_interval'] && $data['periodic_unit']) { // Registro recurrente
+            $periodic = PeriodicController::store($register->toArray());
+            $data['periodic_id'] = $periodic->id;
+        }
 
         return response()->json([
             'register' => $register
@@ -144,5 +146,47 @@ class RegisterController extends Controller
         ];
     }
 
+    public static function checkPeriodics(){
+        $periodics = Periodic::whereNotNull('register_id')->where([['periodic_interval', '>', 0],])->get();
+        foreach ($periodics as $periodic) {
+            if($periodic->origen_time_created == today()){
+                $register = Register::find($periodic->register_id);
+                return Register::create([
+                    'user_id'        => $register['user_id'],
+                    'account_id'     => $register['account_id'],
+                    'amount'         => $register['amount'],
+                    'origin'         => $register['origin'],
+                    'subcategory_id' => $register['subcategory_id'] ?? null,
+                    'name_category'  => $register['name_category'] ?? null,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ]);
 
+                $periodic->periodic_interval--;
+
+                $baseDate = Carbon::now();
+
+                // 2. Calculamos la siguiente fecha según la unidad periódica
+                switch ($data['periodic_unit']) {
+                    case 'Días':
+                        $next = $baseDate->copy()->addDay();
+                        break;
+
+                    case 'Semanas':
+                        $next = $baseDate->copy()->addWeek();
+                        break;
+
+                    case 'Meses':
+                        $next = $baseDate->copy()->addMonth();
+                        break;
+
+                    default:
+                        $next = $baseDate->copy();
+                        break;
+                }
+                $periodic->origen_time_created = $next->toDateTimeString();
+                $periodic->save();
+            }
+        }
+    }
 }

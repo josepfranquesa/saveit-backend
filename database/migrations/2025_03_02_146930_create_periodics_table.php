@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('periodics', function (Blueprint $table) {
             $table->id();
-            $table->enum('frequency', ['DIA', 'SET', 'MES', 'ANY']);
-            $table->string('timeOfDay');
-            $table->tinyInteger('dayOfWeek')->nullable();
-            $table->tinyInteger('dayOfMonth')->nullable();
-            $table->string('dayOfYear')->nullable();
-            $table->json('specificDates')->nullable();
+            $table->integer('periodic_interval');
+            $table->string('periodic_unit');
+            $table->timestamp('origen_time_created');
             $table->timestamps();
-
         });
     }
 

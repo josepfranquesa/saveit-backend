@@ -15,9 +15,16 @@ class PeriodicRepository
         return Periodic::findOrFail($id);
     }
 
-    public function create(array $data)
+    public static function create(array $data)
     {
-        return Periodic::create($data);
+        return Periodic::create([
+            'periodic_interval'   => $data['periodic_interval'],
+            'periodic_unit'       => $data['periodic_unit'],
+            'origen_time_created' => $data['created_at'],
+            'created_at'          => now(),
+            'updated_at'          => now(),
+            'register_id'         => $data['id'],
+        ]);
     }
 
     public function update($id, array $data)

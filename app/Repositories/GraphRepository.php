@@ -13,5 +13,15 @@ class GraphRepository
     {
         return Graphic::create($data);
     }
+    public static function findById($id)
+    {
+        return Graphic::find($id);
+    }
+
+    public static function delete(Graphic $graphic)
+    {
+        return $graphic->delete();
+    }
+
 
 }

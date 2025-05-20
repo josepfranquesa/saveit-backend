@@ -65,7 +65,9 @@ class RegisterController extends Controller
         }
         if (! empty($data['subcategory_id'])){
             $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
-            SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
+            if($data['amount'] < 0){
+                SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
+            }
             //gestionar misstge de error de si s'ha superat el limit, nomes notificar per pantalla
         }
 
@@ -73,7 +75,7 @@ class RegisterController extends Controller
         AccountController::updateAccountBalance($data['account_id'], $data['amount']);
 
         if ($data['periodic_interval'] && $data['periodic_unit']) { // Registro recurrente
-            $periodic = PeriodicController::store($register->toArray());
+            $periodic = PeriodicController::store($register->toArray(), $data['periodic_interval'], $data['periodic_unit']);
             $data['periodic_id'] = $periodic->id;
         }
 

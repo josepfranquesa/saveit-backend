@@ -19,10 +19,10 @@ class PeriodicController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public static function store(Array $data)
+    public static function store(Array $data, $periodic_interval, $periodic_unit )
     {
         $baseDate = isset($data['created_at']) ? Carbon::parse($data['created_at']) : Carbon::now();
-        switch ($data['periodic_unit']) {
+        switch ($periodic_unit) {
             case 'Días':
                 $next = $baseDate->copy()->addDay();
                 break;
@@ -37,6 +37,9 @@ class PeriodicController extends Controller
                 break;
         }
         $data['created_at'] = $next->toDateTimeString();
+        $data['periodic_interval'] = $periodic_interval;
+        $data['periodic_unit'] = $periodic_unit;
+        $data['origen_time_created'] = $next->toDateTimeString();
         return PeriodicRepository::create($data);
 
     }

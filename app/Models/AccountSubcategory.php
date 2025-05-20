@@ -10,19 +10,23 @@ class AccountSubcategory extends Model
 
     protected $fillable = ['account_id', 'category_id', 'subcategory_id'];
 
+    public $timestamps = false;
+
     public function account()
     {
         return $this->belongsTo(Account::class);
     }
 
-    public function categoy()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function subCategoy()
+    public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
     }
+
+
 
 }

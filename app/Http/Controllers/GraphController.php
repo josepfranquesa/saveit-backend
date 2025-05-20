@@ -129,4 +129,10 @@ class GraphController extends Controller
     public function getGraphs(int $acount){
         return GraphRepository::findByAccountId($acount);
     }
+
+    public function destroyGraph(int $id){
+        $graphic = GraphRepository::findById($id);
+        GraphRepository::delete($graphic);
+        return response()->json(['message' => 'Gráfico eliminado'], 200);
+    }
 }

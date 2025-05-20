@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('objective_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('subcategory_id')->nullable()->constrained()->onDelete('set null');
             $table->decimal('amount', 10, 2);
-            $table->string('origin'); // puede ser tarjeta, efectivo, etc.
+            $table->string('origin');
             $table->timestamps();
         });
     }

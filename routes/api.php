@@ -56,5 +56,6 @@ use App\Repositories\UserAccountRepository;
 
     Route::post('/graph', [GraphController::class, 'getInfoForGraph']);
     Route::get('/graph/{acount_id}', [GraphController::class, 'getGraphs']);
+    Route::delete('/graph/{id}', [GraphController::class, 'destroyGraph']);
 
 

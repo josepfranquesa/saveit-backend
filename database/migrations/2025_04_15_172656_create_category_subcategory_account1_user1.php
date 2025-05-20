@@ -72,40 +72,6 @@ return new class extends Migration {
             'updated_at' => now(),
         ]);
 
-        Category::create([
-            'name' => 'Nomina',
-            'type' => 'Ingreso',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        SubCategory::create([
-            'category_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        AccountSubcategory::create([
-            'account_id' => 1,
-            'category_id' => 1,
-            'subcategory_id' => 1,
-        ]);
-
-        Category::create([
-            'name' => 'Compres',
-            'type' => 'Despesa',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        SubCategory::create([
-            'category_id' => 2,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        AccountSubcategory::create([
-            'account_id' => 1,
-            'category_id' => 2,
-            'subcategory_id' => 2,
-        ]);
     }
 
     /**

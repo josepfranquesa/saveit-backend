@@ -44,7 +44,7 @@ class UserController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_in' => 3600, // Si luego quieres controlar expiración, puedes modificar esto
+            'expires_in' => 3600,
             'user' => $user
         ], 201);
     }
@@ -84,9 +84,9 @@ class UserController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        // if (!$user || !Hash::check($request->password, $user->password)) {
-        //     return response()->json(['error' => 'Credenciales inválidas'], 401);
-        // }
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Credenciales inválidas'], 401);
+        }
 
         $token = $user->createToken('flutter-token')->plainTextToken;
 

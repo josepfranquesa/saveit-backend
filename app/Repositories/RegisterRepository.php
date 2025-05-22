@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Http\Controllers\AccountController;
 use App\Models\Register;
 use Carbon\Carbon;
 
@@ -30,6 +31,18 @@ class RegisterRepository
 
     public static function delete($id)
     {
+        $register = Register::findOrFail($id);
+        if ($register->objective_id) {
+            $objective = ObjectiveRepository::findById($register->objective_id);
+            if($objective->amount -= $register->amount <= 0){
+                $objective->amount = 0;
+            }
+            else{
+                $objective->amount -= $register->amount;
+            }
+            $objective->save();
+        }
+        AccountController::updateAccountBalance($register->account_id, $register->amount);
         return Register::destroy($id);
     }
 
@@ -43,6 +56,7 @@ class RegisterRepository
         return Register::create([
             'user_id'        => $data['user_id'],
             'account_id'     => $data['account_id'],
+            'objective_id'   => $data['objective_id'] ?? null,
             'amount'         => $data['amount'],
             'origin'         => $data['origin'],
             'subcategory_id' => $data['subcategory_id'] ?? null,

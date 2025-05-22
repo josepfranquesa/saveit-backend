@@ -41,9 +41,16 @@ class AccountController extends Controller
 
     public static function updateAccountBalance($id, $balance) {
         $account = AccountRepository::findAccountById($id);
-        $account->balance = $account->balance + $balance;
+
+        if ($balance > 0) $account->balance -= $balance;
+        else $account->balance += abs($balance);
+
         $account->save();
-        return response()->json(['account' => $account, 'message' => 'Balance actualizado correctamente']);
+
+        return response()->json([
+            'account' => $account,
+            'message' => 'Balance actualizado correctamente'
+        ]);
     }
 
     public function destroy($id) {} // Eliminar una cuenta

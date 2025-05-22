@@ -85,21 +85,26 @@ class SubCategoryRepository
 
     public static function checkLimit($subcategory_id, $amount){
         $limit = ObjectiveRepository::findById($subcategory_id);
-        if($limit == null){
+
+        if (!$limit) {
             return [
-                'message' => 'No existe un limite para esta categoria/subcategoria',
+                'message' => 'No existe un límite para esta categoría/subcategoría',
             ];
         }
-        else{
-            $limit->amount += abs($amount);
-            $limit->save();
-            if($limit->amount > $limit->total){
-                return [
-                    'limite' => $limit,
-                    'message' => 'Has superado el limite en la categoria/subcategoria'. $limit->name,
-                ];
-            }
+
+        $limit->amount += abs($amount);
+        $limit->save();
+
+        if ($limit->amount > $limit->total) {
+            return [
+                'limite' => $limit,
+                'message' => 'Has superado el límite en la categoría/subcategoría ' . $limit->name,
+            ];
         }
 
+        return [
+            'message' => '',
+        ];
     }
+
 }

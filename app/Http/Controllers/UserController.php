@@ -131,8 +131,11 @@ class UserController extends Controller
             ], 401);
         }
 
-        $user->remember_token = null;
-        $user->save();
+        $eloquentUser = User::find($user->id);
+        if ($eloquentUser) {
+            $eloquentUser->remember_token = null;
+            $eloquentUser->save();
+        }
 
         return response()->json([
             'success' => true,

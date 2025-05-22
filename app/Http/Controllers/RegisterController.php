@@ -48,67 +48,56 @@ class RegisterController extends Controller
             'account_id'      => 'required|numeric',
             'amount'          => 'required|numeric',
             'origin'          => 'required|string',
-            'objectiveId'     => 'nullable|integer|exists:objectives,id',
-            'objectiveAmount' => 'nullable|numeric',
+            'objective_id'     => 'nullable|integer|exists:objectives,id',
+            'objective_amount' => 'nullable|numeric',
             'subcategory_id'  => 'nullable|integer|exists:subcategories,id',
             'periodic_interval' => 'nullable|integer|min:1',
             'periodic_unit'     => 'nullable|string|in:Días,Semanas,Meses',
         ]);
-        if (! empty($data['objectiveId'])) {
-            $objective = ObjectiveRepository::findById($data['objectiveId']);
-            if(($objective->amount + $data['objectiveAmount']) <= $objective->total){
-                $objective->amount += $data['objectiveAmount'];
+        $message = 'Registero creado con exito';
+        if (! empty($data['objective_id']) && isset($data['objective_amount'])) {
+            $objective = ObjectiveRepository::findById($data['objective_id']);
+            if(($objective->amount + $data['objective_amount']) <= $objective->total){
+                $objective->amount += $data['objective_amount'];
             }else{
                 $objective->amount = $objective->total;
+                $message = $message.'. Has conseguido un objetivo';
             }
             $objective->save();
         }
-        if (! empty($data['subcategory_id'])){
+        $response = null;
+
+        if (!empty($data['subcategory_id'])) {
             $data['name_category'] = SubCategoryRepository::findNameByCatSubcatId($data['subcategory_id']);
-            if($data['amount'] < 0){
-                SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
+
+            if ($data['amount'] < 0) {
+                $response = SubCategoryRepository::checkLimit($data['subcategory_id'], $data['amount']);
             }
-            //gestionar misstge de error de si s'ha superat el limit, nomes notificar per pantalla
+
+            if (!empty($response) && !empty($response['message'])) {
+                $message .= '. ' . $response['message'];
+            }
         }
 
         $register = RegisterRepository::createNormal($data);
         AccountController::updateAccountBalance($data['account_id'], $data['amount']);
 
-        if ($data['periodic_interval'] && $data['periodic_unit']) { // Registro recurrente
+        if (isset($data['periodic_interval'], $data['periodic_unit'])) {
             $periodic = PeriodicController::store($register->toArray(), $data['periodic_interval'], $data['periodic_unit']);
             $data['periodic_id'] = $periodic->id;
+            $message = $message.'. '.'Has programado este registro para el futuro con exito';
         }
 
         return response()->json([
+            'message' => $message,
             'register' => $register
         ], 201);
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $data = $request->validate([
-            'user_id'        => 'required|numeric',
-            'account_id'     => 'required|numeric',
-            'amount'         => 'required|numeric',
-            'origin'         => 'required|string',
-            'objectiveId'    => 'nullable|integer|exists:objectives,id',
-            'subcategory_id' => 'nullable|integer|exists:subcategories,id',
-            'periodicId'     => 'nullable|integer|exists:periodics,id',
-            'limit'          => 'nullable|numeric',
-        ]);
-        return RegisterRepository::update($data, $id);
-        //si existe limite se la subcategory_id nueva o antigua, actualizar el limite antiguio y si es el caso actualizar el nuevo
-        //si existe un objetivo asociada, borrar el importe assignado al objetivo y actualizar el nuevo si es el caso
-        //si es recurrente modificar el recurrente
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) //se tendra que mirar tambien si llega un id de periodic i si es el caso borrar el recurrente, lo mismo que el update con el limite y el objetivo
+    public function destroy(string $id)
     {
         return RegisterRepository::delete($id);
     }

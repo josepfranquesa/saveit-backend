@@ -18,7 +18,8 @@ class GraphController extends Controller
             'start_date',
             'end_date',
             'category_ids',
-            'periodo'
+            'periodo',
+            'category_ids',
         ]);
 
         $start  = Carbon::parse($params['start_date']);
